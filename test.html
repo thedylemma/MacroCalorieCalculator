@@ -1,0 +1,18 @@
+<html>
+    <script src="Meal.js"></script>
+    <script src="Ingredient.js"></script>
+
+    <script>
+        let mealOne = new Meal('Chicken Burger');
+        
+        let chickenBurgerIngredients = [
+            new Ingredient('Chicken', {'kcal':{'value':132, 'unit':'kcal'}, 'protien':{'value':30, 'unit':'grams'}}, 100, 150),
+            new Ingredient('Lettuce', {'kcal':{'value':15, 'unit':'kcal'}, 'protien':{'value':0, 'unit':'grams'}}, 100, 28),
+            new Ingredient('Burger Bun', {'kcal':{'value':240, 'unit':'kcal'}, 'protien':{'value':2, 'unit':'grams'}}, 90, 90)
+        ];
+
+        mealOne.addIngredients(chickenBurgerIngredients);
+
+        console.log(mealOne.calculateMacros()); 
+    </script>
+</html>

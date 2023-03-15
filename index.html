@@ -1,173 +1,146 @@
+<!DOCTYPE html>
 <html>
     <head>
+        <script src="Meal.js"></script>
+        <script src="Ingredient.js"></script>
+        <script src="DailyIntake.js"></script>
         <style>
-            body{
-                padding:0px;
-                margin:0px;
+            html, body{
+                font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
             }
 
-            .visusal-row {
+            #daily-intakes{
+                width:300px;
+                background-color:#fff;
+                border-right:1px solid #ededed;
+                position: fixed;
+                left:0px;
+                top:0px;
+                height:100%;
+                padding:15px;
+                font-size: 25px;
+                padding-top:30px;
+                box-sizing: border-box;
+            }
+
+            #meals{
+                width:300px;
+                background-color:#fff;
+                border-right:1px solid #ededed;
+                position: fixed;
+                left:300px;
+                top:0px;
+                height:100%;
+                padding:15px;
+                font-size: 25px;
+                padding-top:30px; 
+                box-sizing: border-box; 
+            }
+
+            #ingredients{
+                width:300px;
+                background-color:#fff;
+                border-right:1px solid #ededed;
+                position: fixed;
+                left:600px;
+                top:0px;
+                height:100%;
+                padding:15px;
+                font-size: 25px;
+                padding-top:30px;
+                box-sizing: border-box;
+            }
+
+            .add-button, .intake-button-selected, .intake-button{
                 width: 100%;
-                margin-bottom: 50px;
+                height:60px;
+                background-color:#fff;
+                font-size: 17px;
+                border:none;
+                border:2px solid #fff;
+                cursor:pointer;
+                transition:0.2s ease;
+                -webkit-transition:0.2s ease;
+                -ms-transition:0.2s ease;
+                -moz-transition:0.2s ease;
+                -o-transition:0.2s ease;
+                border-radius: 10px;
+                font-weight: bold;
+            }
+
+            .intake-button:hover{
                 background-color:#ededed;
-                padding:10px;
             }
 
-            #food-item-header{
-                margin-bottom: 5px;
-            }
-            
-            .add-ingredient-button{
-                width: 500px;
-                padding: 10px;
+            .intake-button-selected{
+                background-color: #2f7fe8;
+                color:#fff;
             }
 
-            #ingredient-view{
-                width:100%;
-                margin-left: auto;
-                margin-right: auto;
-                position: relative;
-                padding:0px;
-                max-width: 700px;
+            #intake-buttons, #meal-buttons, #ingredient-buttons{
+                margin-top:20px;
+            }
+
+            .add-button{
+                background-color: #f2f1f1;
+                font-weight:normal;
             }
         </style>
     </head>
-    <body onload="initialise();">
-        <div id="ingredient-view">
-            <div id="food-item-header">My ingredient contains:</div>
-            <div class="visusal-row">
-                <div id="macro-nutrients-form">
-                    
-                </div>
-                <div id="per-grams-wrapper">
-                    per <input onkeyup="calculateOutput();" type="text" id="per_grams"> grams
-                </div>
-            </div>
-            <div class="visusal-row">
-                <div id="desired-macro-wrapper">
-                    I want <input type="text"> of <select></select>
-                </div>
-                <div id="output-needs-wrapper">
-                    I need <span id="output-needs">x</span> grams
-                </div>
-            </div>
-            <div>
-                <div id="usage-wrapper" class="visusal-row">
-                    I'm going to use <input onkeyup="calculateOutput();" id="usage_grams" type="text"> grams
-                </div>
-                <div id="macro-nutrients-results-wrapper" class="visusal-row">
-                    Resulting In:
-                    <div id="macro-nutrients-results">
-                        
-                    </div>
-                </div>
-            </div>
-            <button class="add-ingredient-button">Make it a Meal</button>
-            </div>
-        <script>
-            let macronutriets = [{name:'Fat', value:0, per_gram_value:0}, {name:'Carbs', value:0, per_gram_value:0}, {name:'Salt', value:0, per_gram_value:0}, {name:'Kcal', value:0, per_gram_value:0}];
-            let ingredients = [];
-
-            let current_ingredient_name = "";
-            let current_gram_usage = 0;
-
-            let initialise = () => {
-                macronutriets.forEach(macronutriet => {
-                    //add html input.
-                    createMacroNutrient(macronutriet);
-                });
-            }
-
-            let createMacroInputRow = (macronutriet) => {
-                //create div row
-                let row = document.createElement('div');
-                row.className = 'macro-nutrient-row';
+    <body>
+        <div id="daily-intakes">
+            <b>Daily Tracking</b>
+            <div id="intake-buttons">
                 
-                let label = document.createElement('div');
-                label.className = 'macro-nutrient-label';
-                label.innerHTML = macronutriet;
+            </div>
+            <button class="add-button">New Intake</button>
+        </div>
+        <div id="meals">
+            <b>Meals</b>
+            <div id="meal-buttons">
 
-                let input_wrapper = document.createElement('div');
-                input_wrapper.innerHTML = "<input onkeyup='macroInput(this);'' placeholder='0' type='text' class='macro-input' id='"+macronutriet+"'>";
+            </div>
+            <button class="add-button">New Meal</button>
+        </div>
+        <div id="ingredients">
+            <b>Ingredients</b>
+            <div id="ingredient-buttons">
 
-                //add row
-                let macro_form = document.getElementById('macro-nutrients-form');
-                macro_form.appendChild(row);
-
-                //add row contents
-                row.appendChild(label);
-                row.appendChild(input_wrapper);
-            };
-
-            let createMacroOutputRow = (macronutriet) => {
-                //create div row
-                let row = document.createElement('div');
-                row.className = 'macro-nutrient-output-row';
-                
-                let label = document.createElement('div');
-                label.className = 'macro-nutrient-output-label';
-                label.innerHTML = macronutriet['name'];
-
-                let output_wrapper = document.createElement('div');
-                output_wrapper.innerHTML = "<span id='macro-output-"+macronutriet['name']+"'>"+macronutriet['value']+"</span>";
-
-                //add row
-                let macro_form = document.getElementById('macro-nutrients-results');
-                macro_form.appendChild(row);
-
-                //add row contents
-                row.appendChild(label);
-                row.appendChild(output_wrapper);
-            };
-
-            let createMacroNutrient = (macronutriet) => {
-                createMacroInputRow(macronutriet['name']);
-                createMacroOutputRow(macronutriet);
-            }
-
-            let openCreateMeal = () => {
-                document.getElementById("home-view").style.display = 'none';
-                document.getElementById("create-meal-view").style.display = 'block';
-            }
-
-            let closeCreateMeal = () => {
-                document.getElementById("home-view").style.display = 'block';
-                document.getElementById("create-meal-view").style.display = 'none';
-            }
-
-            let calculateOutput = () => {
-                macronutriets.forEach(macronutriet => {
-                    //check if required values (per grams and usage grams are present)
-                    if (document.getElementById("per_grams").value 
-                    && document.getElementById("usage_grams").value) {
-                        //calculate per gram value of each macronutrient
-                        //calculate number of macronutrient by multiplying per gram by usage grams
-                        let usageGrams = document.getElementById("usage_grams").value;
-                        let perGram = document.getElementById("per_grams").value;
-                        let macroValue = document.getElementById(macronutriet['name']).value;
-                        macronutriet['per_gram_value'] = calculatePerMacroGram(macroValue, perGram);
-
-                        //calculate number of macronutrient by multiplying per gram by usage grams
-                        let result = (macronutriet['per_gram_value'] * usageGrams);
-                        document.getElementById("macro-output-" + macronutriet['name']).innerHTML = result;
-                    }
-                });
-            }
-
-            let calculatePerMacroGram = (macroValue, perGram) => {
-                return (macroValue/perGram);
-            }
-
-            let perGramValid = () => {
-                return true;
-            }
-
-            let macroInput = (element) => {
-                let macroValue = element.value;
-                macroValue = macroValue.replace(/[^0-9.]/g, '');
-                element.value = macroValue;
-                calculateOutput();
-            }
-        </script>
+            </div>
+            <button class="add-button">New Ingredient</button>
+        </div>
     </body>
+    <script>
+        let dailyIntakes = [];
+
+        //create a daily intake object if there isn't one already.
+        if (dailyIntakes.length < 1) {
+            dailyIntakes.push(new DailyIntake());
+            dailyIntakes.push(new DailyIntake());
+            dailyIntakes.push(new DailyIntake());
+            dailyIntakes.push(new DailyIntake());
+            dailyIntakes.push(new DailyIntake());
+        }
+
+        function generateDailyIntakeMenu() {
+            console.log(dailyIntakes)
+            for (var i = 0; i < dailyIntakes.length; i++) {
+                let intakeButton = document.createElement('button');
+                intakeButton.className = 'intake-button';
+                intakeButton.innerHTML = dailyIntakes[i].getDate();
+                intakeButton.setAttribute('onclick', 'selectDailyIntake(this)');
+                document.getElementById('daily-intakes').appendChild(intakeButton);
+            }
+        }
+
+        generateDailyIntakeMenu();
+
+        function selectDailyIntake(element) {
+            let selectedButton = document.getElementsByClassName('intake-button-selected');
+            if (selectedButton.length > 0) {
+                selectedButton[0].className = 'intake-button';
+            }
+            element.className = 'intake-button-selected';
+        }
+    </script>
 </html>

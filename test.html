@@ -1,10 +1,13 @@
 <html>
     <script src="Meal.js"></script>
     <script src="Ingredient.js"></script>
+    <script src="DailyIntake.js"></script>
 
     <script>
-        let mealOne = new Meal('Chicken Burger');
-        
+        let mealOne = new Meal('Breakfast');
+        let mealTwo = new Meal('Lunch');
+        let mealThree = new Meal('Dinner');
+
         let chickenBurgerIngredients = [
             new Ingredient('Chicken', {'kcal':{'value':132, 'unit':'kcal'}, 'protien':{'value':30, 'unit':'grams'}}, 100, 150),
             new Ingredient('Lettuce', {'kcal':{'value':15, 'unit':'kcal'}, 'protien':{'value':0, 'unit':'grams'}}, 100, 28),
@@ -12,7 +15,18 @@
         ];
 
         mealOne.addIngredients(chickenBurgerIngredients);
+        mealTwo.addIngredients(chickenBurgerIngredients);
+        mealTwo.addIngredients(chickenBurgerIngredients);
 
-        console.log(mealOne.calculateMacros()); 
+        let dailyMeals = [
+            mealOne,
+            mealTwo,
+            mealThree
+        ];
+
+        let dailyIntake = new DailyIntake();
+        dailyIntake.addMeals(dailyMeals);
+
+        console.log(dailyIntake.calculateMacros()); 
     </script>
 </html>
